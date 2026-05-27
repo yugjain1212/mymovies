@@ -1,0 +1,575 @@
+/* ============================================================
+   CINEVAULT — Cinematic Identity Wall
+   Dark luxury design system · WCAG 2.2 AA
+   ============================================================ */
+
+/* ────────────────────────────────────────────────────────────
+   1. DESIGN TOKENS
+   ──────────────────────────────────────────────────────────── */
+:root {
+  /* Surface */
+  --c-bg:            #050505;
+  --c-surface:       #0e0e0e;
+  --c-surface-hi:    #161616;
+
+  /* Text */
+  --c-text:          #f5f5f5;
+  --c-text-2:        #8a8a8a;
+  --c-text-3:        rgba(255, 255, 255, 0.28);
+
+  /* Borders */
+  --c-border:        rgba(255, 255, 255, 0.07);
+  --c-border-hi:     rgba(255, 255, 255, 0.13);
+
+  /* Accent — warm cinematic gold */
+  --c-gold:          #c9a96e;
+  --c-gold-dim:      rgba(201, 169, 110, 0.12);
+
+  /* Typography */
+  --f-display:       'Inter Tight', 'Inter', Arial, sans-serif;
+  --f-body:          'Inter', Arial, sans-serif;
+
+  /* Easing */
+  --ease-spring:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out:        cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-in-out:     cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Modal timing */
+  --modal-dur:       420ms;
+  --modal-back-dur:  260ms;
+}
+
+/* ────────────────────────────────────────────────────────────
+   2. RESET & BASE
+   ──────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--f-body);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ────────────────────────────────────────────────────────────
+   3. LOADING SCREEN
+   ──────────────────────────────────────────────────────────── */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  background: var(--c-bg);
+  transition: opacity 700ms var(--ease-out), visibility 700ms var(--ease-out);
+}
+
+#loading-screen.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.ls-wordmark {
+  font-family: var(--f-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  color: var(--c-text);
+  opacity: 0.85;
+}
+
+.ls-bar {
+  width: 160px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+}
+
+.ls-bar__fill {
+  height: 100%;
+  width: 30%;
+  background: var(--c-gold);
+  border-radius: 1px;
+  animation: ls-shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes ls-shimmer {
+  0%   { transform: translateX(-200%); }
+  100% { transform: translateX(600%); }
+}
+
+.ls-sub {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--c-text-2);
+  font-family: var(--f-body);
+}
+
+/* ────────────────────────────────────────────────────────────
+   4. CANVAS STAGE
+   ──────────────────────────────────────────────────────────── */
+.stage {
+  position: fixed;
+  inset: 0;
+  background: var(--c-bg);
+}
+
+#magnetic-grid {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+#magnetic-grid.cursor-pointer {
+  cursor: pointer;
+}
+
+/* ────────────────────────────────────────────────────────────
+   5. WORDMARK
+   ──────────────────────────────────────────────────────────── */
+#cv-wordmark {
+  position: fixed;
+  top: 28px;
+  left: 32px;
+  z-index: 10;
+  font-family: var(--f-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  color: rgba(255, 255, 255, 0.22);
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 1000ms var(--ease-out);
+}
+
+#cv-wordmark.is-hidden {
+  opacity: 0;
+}
+
+/* ────────────────────────────────────────────────────────────
+   6. INTERACTION HINT
+   ──────────────────────────────────────────────────────────── */
+#cv-hint {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  font-family: var(--f-body);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  transition: opacity 800ms var(--ease-out);
+}
+
+#cv-hint.is-hidden {
+  opacity: 0;
+}
+
+/* ────────────────────────────────────────────────────────────
+   7. MODAL — FOUNDATION
+   ──────────────────────────────────────────────────────────── */
+.cv-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.cv-modal[hidden] {
+  display: none;
+}
+
+/* Backdrop */
+.cv-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.87);
+  backdrop-filter: blur(14px) saturate(0.5);
+  -webkit-backdrop-filter: blur(14px) saturate(0.5);
+  opacity: 0;
+  transition: opacity var(--modal-back-dur) var(--ease-out);
+}
+
+.cv-modal.is-open .cv-modal__backdrop {
+  opacity: 1;
+}
+
+/* Panel */
+.cv-modal__panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 36px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-hi);
+  border-radius: 18px;
+  padding: 28px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 88vh;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.025),
+    0 4px 12px rgba(0, 0, 0, 0.5),
+    0 24px 64px rgba(0, 0, 0, 0.75),
+    0 64px 120px rgba(0, 0, 0, 0.6);
+  transform: scale(0.91) translateY(16px);
+  opacity: 0;
+  transition:
+    transform var(--modal-dur) var(--ease-spring),
+    opacity var(--modal-dur) var(--ease-out);
+}
+
+.cv-modal.is-open .cv-modal__panel {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* ────────────────────────────────────────────────────────────
+   8. MODAL — CLOSE BUTTON
+   ──────────────────────────────────────────────────────────── */
+.cv-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+  color: var(--c-text-2);
+  cursor: pointer;
+  z-index: 2;
+  transition:
+    background 200ms var(--ease-out),
+    color 200ms var(--ease-out),
+    transform 200ms var(--ease-spring);
+}
+
+.cv-modal__close:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: var(--c-text);
+  transform: scale(1.08);
+}
+
+.cv-modal__close:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 3px;
+}
+
+/* ────────────────────────────────────────────────────────────
+   9. MODAL — POSTER
+   ──────────────────────────────────────────────────────────── */
+.cv-modal__poster-wrap {
+  position: relative;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.cv-modal__poster {
+  display: block;
+  width: 210px;
+  height: 315px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.5),
+    0 12px 40px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity 400ms 140ms var(--ease-out),
+    transform 450ms 140ms var(--ease-spring);
+}
+
+.cv-modal.is-open .cv-modal__poster {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.cv-modal__poster-glow {
+  position: absolute;
+  inset: -24px;
+  border-radius: 24px;
+  opacity: 0.15;
+  filter: blur(36px);
+  z-index: -1;
+  background: var(--c-gold);
+  transition: opacity 600ms var(--ease-out);
+}
+
+/* ────────────────────────────────────────────────────────────
+   10. MODAL — META
+   ──────────────────────────────────────────────────────────── */
+.cv-modal__meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.08) transparent;
+}
+
+.cv-modal__meta::-webkit-scrollbar {
+  width: 3px;
+}
+.cv-modal__meta::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+/* Eyebrow */
+.cv-modal__eyebrow {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  color: var(--c-gold);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 300ms 150ms var(--ease-out), transform 350ms 150ms var(--ease-spring);
+}
+
+.cv-modal.is-open .cv-modal__eyebrow {
+  opacity: 0.8;
+  transform: translateY(0);
+}
+
+/* Title */
+.cv-modal__title {
+  font-family: var(--f-display);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--c-text);
+  letter-spacing: -0.025em;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 350ms 200ms var(--ease-out), transform 400ms 200ms var(--ease-spring);
+}
+
+.cv-modal.is-open .cv-modal__title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Sub — year · language */
+.cv-modal__sub {
+  font-size: 12px;
+  color: var(--c-text-2);
+  letter-spacing: 0.03em;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 350ms 240ms var(--ease-out), transform 400ms 240ms var(--ease-spring);
+}
+
+.cv-modal.is-open .cv-modal__sub {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Rating */
+.cv-modal__rating {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 350ms 270ms var(--ease-out), transform 400ms 270ms var(--ease-spring);
+}
+
+.cv-modal.is-open .cv-modal__rating {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cv-modal__star {
+  color: var(--c-gold);
+  font-size: 15px;
+  line-height: 1;
+}
+
+.cv-modal__score {
+  font-family: var(--f-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--c-text);
+  letter-spacing: -0.03em;
+}
+
+.cv-modal__votes {
+  font-size: 11px;
+  color: var(--c-text-2);
+}
+
+/* Genres */
+.cv-modal__genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 350ms 300ms var(--ease-out), transform 400ms 300ms var(--ease-spring);
+}
+
+.cv-modal.is-open .cv-modal__genres {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.genre-pill {
+  font-family: var(--f-body);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--c-text-2);
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--c-border);
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+
+/* Overview */
+.cv-modal__overview {
+  font-family: var(--f-body);
+  font-size: 13px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.48);
+  flex: 1;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 350ms 330ms var(--ease-out), transform 400ms 330ms var(--ease-spring);
+}
+
+.cv-modal.is-open .cv-modal__overview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Divider */
+.cv-modal__divider {
+  height: 1px;
+  background: var(--c-border);
+  opacity: 0;
+  transition: opacity 350ms 360ms var(--ease-out);
+}
+
+.cv-modal.is-open .cv-modal__divider {
+  opacity: 1;
+}
+
+/* TMDB badge */
+.cv-modal__tmdb-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 350ms 390ms var(--ease-out);
+}
+
+.cv-modal.is-open .cv-modal__tmdb-badge {
+  opacity: 1;
+}
+
+.cv-modal__tmdb-badge span {
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--c-text-3);
+}
+
+/* ────────────────────────────────────────────────────────────
+   11. RESPONSIVE — MOBILE
+   ──────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .cv-modal {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .cv-modal__panel {
+    flex-direction: column;
+    gap: 18px;
+    padding: 20px 18px 28px;
+    max-height: 91vh;
+    border-radius: 20px 20px 0 0;
+    border-bottom: none;
+  }
+
+  .cv-modal__poster-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  .cv-modal__poster {
+    width: 120px;
+    height: 180px;
+  }
+
+  .cv-modal__title {
+    font-size: 20px;
+  }
+
+  #cv-wordmark {
+    top: 16px;
+    left: 18px;
+    font-size: 9px;
+  }
+
+  #cv-hint {
+    bottom: 18px;
+    font-size: 9px;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   12. REDUCED MOTION
+   ──────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .cv-modal__panel,
+  .cv-modal__backdrop,
+  .cv-modal__poster,
+  .cv-modal__eyebrow,
+  .cv-modal__title,
+  .cv-modal__sub,
+  .cv-modal__rating,
+  .cv-modal__genres,
+  .cv-modal__overview,
+  .cv-modal__divider,
+  .cv-modal__tmdb-badge,
+  #loading-screen,
+  #cv-wordmark,
+  #cv-hint {
+    transition: none;
+    animation: none;
+  }
+}
