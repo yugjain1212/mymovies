@@ -61,7 +61,7 @@ const TOKENS = {
     stepYM: 130,  /* mobile row pitch px      */
     baseWD: 54,   /* idle poster width desk.  */
     baseWM: 44,   /* idle poster width mobile */
-    jitter: 0,    /* no jitter — clean grid   */
+    jitter: 25,   /* random offset for organic scatter */
   },
   field: {
     radiusFraction: 0.30, /* influence radius fraction of min(W,H) */
@@ -107,6 +107,9 @@ let images = [];   /* parallel Image[] for grid cells */
 let genreMap = {};  /* id → name                      */
 
 let cells = [];
+let camera = { x: 0, y: 0, vx: 0, vy: 0 };
+let gridCols = 0;
+let gridRows = 0;
 let width = 0;
 let height = 0;
 let dpr = 1;
@@ -267,68 +270,77 @@ function resize() {
    BUILD CELLS — portrait 2:3 grid
    ============================================================ */
 function buildCells() {
+  const totalMovies = movies.length;
+  if (totalMovies === 0) {
+    cells = [];
+    return;
+  }
+
+  const aspect = width / height;
+  gridRows = Math.ceil(Math.sqrt(totalMovies / aspect));
+  gridCols = Math.ceil(totalMovies / gridRows);
+
+  if (REDUCE_MOTION) {
+    generateVisibleCells();
+  }
+}
+
+function generateVisibleCells() {
   const mob = width < 720;
   const baseW = mob ? TOKENS.grid.baseWM : TOKENS.grid.baseWD;
+  const maxD = mob ? TOKENS.field.maxWM : TOKENS.field.maxWD;
+  const stepX = mob ? TOKENS.grid.stepXM : TOKENS.grid.stepXD;
+  const stepY = mob ? TOKENS.grid.stepYM : TOKENS.grid.stepYD;
   const J = TOKENS.grid.jitter;
 
-  // Sunflower (phyllotaxis) spiral for a close, circular aesthetic
-  const c = baseW * 0.85;
-  const goldenAngle = 137.508 * (Math.PI / 180);
+  const totalW = gridCols * stepX;
+  const totalH = gridRows * stepY;
 
-  cells = [];
+  if (totalW > 0) camera.x = ((camera.x % totalW) + totalW) % totalW;
+  if (totalH > 0) camera.y = ((camera.y % totalH) + totalH) % totalH;
 
-  // Determine how many cells to draw to cover the screen
-  const maxRadius = Math.sqrt(width * width + height * height) / 2 + baseW * 3;
+  const margin = maxD * 2;
+  const startCol = Math.floor((camera.x - margin) / stepX);
+  const endCol = Math.ceil((camera.x + width + margin) / stepX);
+  const startRow = Math.floor((camera.y - margin) / stepY);
+  const endRow = Math.ceil((camera.y + height + margin) / stepY);
 
-  const cx = width / 2;
-  const cy = height / 2;
+  let i = 0;
+  if (movies.length > 0) {
+    for (let r = startRow; r <= endRow; r++) {
+      for (let c = startCol; c <= endCol; c++) {
+        const wrappedC = ((c % gridCols) + gridCols) % gridCols;
+        const wrappedR = ((r % gridRows) + gridRows) % gridRows;
+        const mIdx = (wrappedR * gridCols + wrappedC) % movies.length;
 
-  let n = 0;
-  let currentRadius = 0;
+        const s1 = hash(mIdx);
+        const s2 = hash(mIdx * 2.618);
+        const s3 = hash(mIdx * 1.414);
 
-  while (currentRadius < maxRadius) {
-    const theta = n * goldenAngle;
-    const r = c * Math.sqrt(n);
+        const jx = (s2 - 0.5) * J * 2;
+        const jy = (s3 - 0.5) * J * 2;
 
-    currentRadius = r;
+        // Offset alternate rows by half a step to create an organic honeycomb/staggered layout
+        const rowOffset = (Math.abs(r) % 2 === 1) ? stepX * 0.5 : 0;
 
-    const s1 = hash(n);
-    const s2 = hash(n * 2.618);
-    const s3 = hash(n * 1.414);
+        const cx = c * stepX - camera.x + jx + rowOffset;
+        const cy = r * stepY - camera.y + jy;
 
-    const jx = (s2 - 0.5) * J * 2;
-    const jy = (s3 - 0.5) * J * 2;
-
-    // Scale Y by 1.5 to map the spiral into an ellipse that perfectly
-    // packs the 2:3 aspect ratio posters without vertical overlapping.
-    const x = cx + r * Math.cos(theta) + jx;
-    const y = cy + r * Math.sin(theta) * 1.5 + jy;
-
-    const mIdx = idxForCell(0, n); // Use linear index 'n'
-
-    // Performance optimization: Frustum Culling
-    // Only add the cell if it's actually visible on screen (plus a safe margin).
-    // This stops it from generating thousands of offscreen cells and drastically fixes lag.
-    const maxD = mob ? TOKENS.field.maxWM : TOKENS.field.maxWD;
-    const margin = maxD * 2;
-    if (x >= -margin && x <= width + margin && y >= -margin && y <= height + margin) {
-      cells.push({
-        x,
-        y,
-        baseW,
-        baseH: baseW * 1.5,
-        seed: s1,
-        movie: movies[mIdx] || null,
-        image: images[mIdx] || null,
-        _eased: 0,
-        _w: baseW, _h: baseW * 1.5,
-        _x: 0, _y: 0,
-        _alpha: 0,
-      });
+        if (i < cells.length) {
+          const cell = cells[i];
+          cell.x = cx; cell.y = cy;
+          cell.baseW = baseW; cell.baseH = baseW * 1.5;
+          cell.seed = s1;
+          cell.movie = movies[mIdx] || null;
+          cell.image = images[mIdx] || null;
+        } else {
+          cells.push({ x: cx, y: cy, baseW, baseH: baseW * 1.5, seed: s1, movie: movies[mIdx] || null, image: images[mIdx] || null, _eased: 0, _w: baseW, _h: baseW * 1.5, _alpha: 1 });
+        }
+        i++;
+      }
     }
-
-    n++;
   }
+  cells.length = i;
 }
 
 /* ============================================================
@@ -428,9 +440,34 @@ function render() {
   }
   const introEased = easeOut3(introProgress);
 
-  /* ── Smooth pointer ──────────────────────────────── */
+  /* ── Smooth pointer & Camera Panning ─────────────── */
   pointer.x = lerp(pointer.x, pointer.tx, TOKENS.motion.lerp);
   pointer.y = lerp(pointer.y, pointer.ty, TOKENS.motion.lerp);
+
+  if (pointer.active && interacted) {
+    const panZone = 250;
+    const accel = 0.15;
+    const maxSpeed = 5;
+
+    // X Axis panning
+    if (pointer.tx < panZone) camera.vx -= accel;
+    else if (pointer.tx > width - panZone) camera.vx += accel;
+    else camera.vx *= 0.95;
+
+    // Y Axis panning
+    if (pointer.ty < panZone) camera.vy -= accel;
+    else if (pointer.ty > height - panZone) camera.vy += accel;
+    else camera.vy *= 0.95;
+
+    camera.vx = clamp(camera.vx, -maxSpeed, maxSpeed);
+    camera.vy = clamp(camera.vy, -maxSpeed, maxSpeed);
+  } else {
+    camera.vx *= 0.96;
+    camera.vy *= 0.96;
+  }
+
+  camera.x += camera.vx;
+  camera.y += camera.vy;
 
   /* ── Clear to near-black ─────────────────────────── */
   ctx.fillStyle = '#030303';
@@ -447,9 +484,10 @@ function render() {
   const maxD = mob ? TOKENS.field.maxWM : TOKENS.field.maxWD;
 
   /* ══════════════════════════════════════════════════
-   * PHYSICS PASS — compute state for all cells.
-   * No drawing here. Just cheap math.
+   * INFINITE GRID GENERATOR & PHYSICS PASS
    * ══════════════════════════════════════════════════ */
+  generateVisibleCells();
+
   let overCell = false;
 
   for (const cell of cells) {
