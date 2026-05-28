@@ -121,6 +121,9 @@ const pointer = {
   x: -99999, y: -99999,  /* smooth lerped position  */
   tx: -99999, ty: -99999, /* raw target position     */
   active: false,
+  strength: 0,            /* current influence strength */
+  targetStrength: 0,      /* target influence strength */
+  isTouch: false,
 };
 
 /* ============================================================
@@ -346,10 +349,14 @@ function generateVisibleCells() {
 /* ============================================================
    POINTER
    ============================================================ */
+let scrollTimeout;
+
 function onPointerMove(e) {
   pointer.tx = e.clientX;
   pointer.ty = e.clientY;
   pointer.active = true;
+  pointer.targetStrength = 1.0;
+  pointer.isTouch = e.pointerType === 'touch';
 
   if (!interacted) {
     interacted = true;
@@ -358,8 +365,40 @@ function onPointerMove(e) {
   }
 }
 
-function onPointerLeave() {
-  pointer.active = false;
+function onPointerUp(e) {
+  if (e.pointerType === 'touch') {
+    pointer.active = false;
+    pointer.targetStrength = 0.0;
+  }
+}
+
+function onPointerLeave(e) {
+  if (e.pointerType !== 'touch') {
+    pointer.active = false;
+    pointer.targetStrength = 0.0;
+  }
+}
+
+function onScroll() {
+  if (!pointer.active && width < 720) {
+    pointer.tx = width / 2;
+    pointer.ty = height / 2;
+    pointer.targetStrength = 0.3;
+    pointer.isTouch = true;
+    
+    if (!interacted) {
+      interacted = true;
+      wordmarkEl.classList.add('is-hidden');
+      hintEl.classList.add('is-hidden');
+    }
+    
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      if (!pointer.active) {
+        pointer.targetStrength = 0.0;
+      }
+    }, 150);
+  }
 }
 
 /* ============================================================
@@ -443,6 +482,7 @@ function render() {
   /* ── Smooth pointer & Camera Panning ─────────────── */
   pointer.x = lerp(pointer.x, pointer.tx, TOKENS.motion.lerp);
   pointer.y = lerp(pointer.y, pointer.ty, TOKENS.motion.lerp);
+  pointer.strength = lerp(pointer.strength, pointer.targetStrength, TOKENS.motion.lerp * 0.5);
 
   if (pointer.active && interacted) {
     const panZone = 250;
@@ -495,7 +535,8 @@ function render() {
     const dy = pointer.y - cell.y;
     const d = Math.sqrt(dx * dx + dy * dy);
 
-    const magnet = pointer.active ? clamp(1 - d / radius, 0, 1) : 0;
+    const distFactor = clamp(1 - d / radius, 0, 1);
+    const magnet = distFactor * pointer.strength;
     const eased = easeOut3(magnet);
     const scaleP = Math.pow(eased, TOKENS.field.scalePower);
     const w = base + (maxD - base) * scaleP;
@@ -557,11 +598,12 @@ function render() {
    * Drawn LAST so it darkens everything uniformly.
    * ══════════════════════════════════════════════════ */
   const sp = TOKENS.spotlight;
-  if (pointer.active) {
+  if (pointer.strength > 0.01) {
     if (mob) {
       // Massive mobile optimization: gradients covering the entire screen drop FPS significantly.
       // Use a flat dimmed background with a very subtle global opacity reduction.
-      ctx.fillStyle = `rgba(0,0,0,${sp.outerStop * 0.8})`;
+      const alpha = lerp(sp.idleAlpha, sp.outerStop * 0.8, pointer.strength);
+      ctx.fillStyle = `rgba(0,0,0,${alpha})`;
       ctx.fillRect(0, 0, width, height);
     } else {
       const spotR = radius * 1.65;
@@ -573,8 +615,16 @@ function render() {
       grad.addColorStop(sp.midStop, 'rgba(0,0,0,0.10)');
       grad.addColorStop(sp.outerStop, 'rgba(0,0,0,0.80)');
       grad.addColorStop(1, `rgba(0,0,0,${sp.edgeAlpha})`);
+      
+      ctx.globalAlpha = pointer.strength;
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, width, height);
+      
+      ctx.globalAlpha = 1 - pointer.strength;
+      ctx.fillStyle = `rgba(0,0,0,${sp.idleAlpha})`;
+      ctx.fillRect(0, 0, width, height);
+      
+      ctx.globalAlpha = 1.0;
     }
   } else {
     ctx.fillStyle = `rgba(0,0,0,${sp.idleAlpha})`;
@@ -761,7 +811,10 @@ window.addEventListener('resize', () => {
 
 window.addEventListener('pointermove', onPointerMove, { passive: true });
 window.addEventListener('pointerdown', onPointerMove, { passive: true });
+window.addEventListener('pointerup', onPointerUp, { passive: true });
+window.addEventListener('pointercancel', onPointerUp, { passive: true });
 canvas.addEventListener('pointerleave', onPointerLeave, { passive: true });
+window.addEventListener('scroll', onScroll, { passive: true });
 
 /* ============================================================
    BOOT
