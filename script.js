@@ -653,33 +653,25 @@ function render() {
    * ══════════════════════════════════════════════════ */
   const sp = TOKENS.spotlight;
   if (pointer.strength > 0.01) {
-    if (mob) {
-      // Massive mobile optimization: gradients covering the entire screen drop FPS significantly.
-      // Use a flat dimmed background with a very subtle global opacity reduction.
-      const alpha = lerp(sp.idleAlpha, sp.outerStop * 0.8, pointer.strength);
-      ctx.fillStyle = `rgba(0,0,0,${alpha})`;
-      ctx.fillRect(0, 0, width, height);
-    } else {
-      const spotR = radius * 1.65;
-      const grad = ctx.createRadialGradient(
-        pointer.x, pointer.y, 0,
-        pointer.x, pointer.y, spotR
-      );
-      grad.addColorStop(0, 'rgba(0,0,0,0)');
-      grad.addColorStop(sp.midStop, 'rgba(0,0,0,0.10)');
-      grad.addColorStop(sp.outerStop, 'rgba(0,0,0,0.80)');
-      grad.addColorStop(1, `rgba(0,0,0,${sp.edgeAlpha})`);
-      
-      ctx.globalAlpha = pointer.strength;
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, width, height);
-      
-      ctx.globalAlpha = 1 - pointer.strength;
-      ctx.fillStyle = `rgba(0,0,0,${sp.idleAlpha})`;
-      ctx.fillRect(0, 0, width, height);
-      
-      ctx.globalAlpha = 1.0;
-    }
+    const spotR = radius * 1.65;
+    const grad = ctx.createRadialGradient(
+      pointer.x, pointer.y, 0,
+      pointer.x, pointer.y, spotR
+    );
+    grad.addColorStop(0, 'rgba(0,0,0,0)');
+    grad.addColorStop(sp.midStop, 'rgba(0,0,0,0.10)');
+    grad.addColorStop(sp.outerStop, 'rgba(0,0,0,0.80)');
+    grad.addColorStop(1, `rgba(0,0,0,${sp.edgeAlpha})`);
+    
+    ctx.globalAlpha = pointer.strength;
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, width, height);
+    
+    ctx.globalAlpha = 1 - pointer.strength;
+    ctx.fillStyle = `rgba(0,0,0,${sp.idleAlpha})`;
+    ctx.fillRect(0, 0, width, height);
+    
+    ctx.globalAlpha = 1.0;
   } else {
     ctx.fillStyle = `rgba(0,0,0,${sp.idleAlpha})`;
     ctx.fillRect(0, 0, width, height);
