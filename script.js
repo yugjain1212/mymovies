@@ -351,12 +351,55 @@ function generateVisibleCells() {
    ============================================================ */
 let scrollTimeout;
 
+let touchDown = false;
+let lastTouchX = null;
+let lastTouchY = null;
+let touchVelX = 0;
+let touchVelY = 0;
+
+function onPointerDown(e) {
+  pointer.tx = e.clientX;
+  pointer.ty = e.clientY;
+  pointer.active = true;
+  pointer.targetStrength = 1.0;
+  pointer.isTouch = e.pointerType === 'touch';
+  
+  if (pointer.isTouch) {
+    touchDown = true;
+    lastTouchX = e.clientX;
+    lastTouchY = e.clientY;
+    touchVelX = 0;
+    touchVelY = 0;
+    camera.vx = 0;
+    camera.vy = 0;
+  }
+  
+  if (!interacted) {
+    interacted = true;
+    wordmarkEl.classList.add('is-hidden');
+    hintEl.classList.add('is-hidden');
+  }
+}
+
 function onPointerMove(e) {
   pointer.tx = e.clientX;
   pointer.ty = e.clientY;
   pointer.active = true;
   pointer.targetStrength = 1.0;
   pointer.isTouch = e.pointerType === 'touch';
+
+  if (pointer.isTouch && touchDown) {
+    if (lastTouchX !== null && lastTouchY !== null) {
+      const dx = e.clientX - lastTouchX;
+      const dy = e.clientY - lastTouchY;
+      camera.x -= dx;
+      camera.y -= dy;
+      touchVelX = -dx;
+      touchVelY = -dy;
+    }
+    lastTouchX = e.clientX;
+    lastTouchY = e.clientY;
+  }
 
   if (!interacted) {
     interacted = true;
@@ -369,6 +412,11 @@ function onPointerUp(e) {
   if (e.pointerType === 'touch') {
     pointer.active = false;
     pointer.targetStrength = 0.0;
+    touchDown = false;
+    lastTouchX = null;
+    lastTouchY = null;
+    camera.vx = touchVelX;
+    camera.vy = touchVelY;
   }
 }
 
@@ -485,22 +533,28 @@ function render() {
   pointer.strength = lerp(pointer.strength, pointer.targetStrength, TOKENS.motion.lerp * 0.5);
 
   if (pointer.active && interacted) {
-    const panZone = 250;
-    const accel = 0.15;
-    const maxSpeed = 5;
+    if (!pointer.isTouch) {
+      const panZoneX = Math.min(250, width * 0.15);
+      const panZoneY = Math.min(250, height * 0.15);
+      const accel = 0.15;
+      const maxSpeed = 5;
 
-    // X Axis panning
-    if (pointer.tx < panZone) camera.vx -= accel;
-    else if (pointer.tx > width - panZone) camera.vx += accel;
-    else camera.vx *= 0.95;
+      // X Axis panning
+      if (pointer.tx < panZoneX) camera.vx -= accel;
+      else if (pointer.tx > width - panZoneX) camera.vx += accel;
+      else camera.vx *= 0.95;
 
-    // Y Axis panning
-    if (pointer.ty < panZone) camera.vy -= accel;
-    else if (pointer.ty > height - panZone) camera.vy += accel;
-    else camera.vy *= 0.95;
+      // Y Axis panning
+      if (pointer.ty < panZoneY) camera.vy -= accel;
+      else if (pointer.ty > height - panZoneY) camera.vy += accel;
+      else camera.vy *= 0.95;
 
-    camera.vx = clamp(camera.vx, -maxSpeed, maxSpeed);
-    camera.vy = clamp(camera.vy, -maxSpeed, maxSpeed);
+      camera.vx = clamp(camera.vx, -maxSpeed, maxSpeed);
+      camera.vy = clamp(camera.vy, -maxSpeed, maxSpeed);
+    } else {
+      camera.vx *= 0.95;
+      camera.vy *= 0.95;
+    }
   } else {
     camera.vx *= 0.96;
     camera.vy *= 0.96;
@@ -810,7 +864,7 @@ window.addEventListener('resize', () => {
 }, { passive: true });
 
 window.addEventListener('pointermove', onPointerMove, { passive: true });
-window.addEventListener('pointerdown', onPointerMove, { passive: true });
+window.addEventListener('pointerdown', onPointerDown, { passive: true });
 window.addEventListener('pointerup', onPointerUp, { passive: true });
 window.addEventListener('pointercancel', onPointerUp, { passive: true });
 canvas.addEventListener('pointerleave', onPointerLeave, { passive: true });
