@@ -1,41 +1,46 @@
 <!doctype html>
 <html dir="ltr" lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CineVault — Your Cinematic Identity</title>
-  <meta name="description" content="CineVault transforms your watched films into a living magnetic cinematic memory wall. Every poster a memory. Every cursor movement a journey.">
+  <title>MyMovies — A living cinematic memory wall</title>
+  <meta name="description"
+    content="CineVault transforms your watched films into a living magnetic cinematic memory wall. Every poster a memory. Every cursor movement a journey.">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="CineVault — Your Cinematic Identity">
+  <meta property="og:title" content="MyMovies - A living cinematic memory wall">
   <meta property="og:description" content="A living cinematic memory wall made from every movie you've watched.">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="CineVault — Your Cinematic Identity">
+  <meta name="twitter:title" content="MyMovies - A living cinematic memory wall">
   <meta name="twitter:description" content="A living cinematic memory wall made from every movie you've watched.">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet">
 
   <link rel="stylesheet" href="./styles.css">
 </head>
+
 <body>
 
   <!-- ─── LOADING SCREEN ─────────────────────────────────── -->
   <div id="loading-screen" role="status" aria-live="polite" aria-label="Loading CineVault">
-    <div class="ls-wordmark">CINEVAULT</div>
+    <div class="ls-wordmark">MY-MOVIES</div>
     <div class="ls-bar" aria-hidden="true">
       <div class="ls-bar__fill" id="ls-fill"></div>
     </div>
-    <p class="ls-sub" id="ls-sub">Entering the vault…</p>
+    <p class="ls-sub" id="ls-sub">Loading movies…</p>
   </div>
 
   <!-- ─── WORDMARK ───────────────────────────────────────── -->
-  <div id="cv-wordmark" aria-hidden="true">CINEVAULT</div>
+  <div id="cv-wordmark" aria-hidden="true">MY-MOVIES</div>
 
   <!-- ─── HINT ───────────────────────────────────────────── -->
   <div id="cv-hint" aria-hidden="true">
@@ -44,22 +49,12 @@
 
   <!-- ─── CANVAS STAGE ───────────────────────────────────── -->
   <div class="stage">
-    <canvas
-      id="magnetic-grid"
-      role="img"
-      aria-label="Cinematic movie poster wall — hover to explore, click to view details"
-    ></canvas>
+    <canvas id="magnetic-grid" role="img"
+      aria-label="Cinematic movie poster wall — hover to explore, click to view details"></canvas>
   </div>
 
   <!-- ─── CINEMATIC MODAL ────────────────────────────────── -->
-  <div
-    id="cv-modal"
-    class="cv-modal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="modal-title"
-    hidden
-  >
+  <div id="cv-modal" class="cv-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
     <!-- Backdrop -->
     <div class="cv-modal__backdrop" id="modal-backdrop"></div>
 
@@ -69,19 +64,13 @@
       <!-- Close -->
       <button class="cv-modal__close" id="modal-close-btn" aria-label="Close film details">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-          <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
         </svg>
       </button>
 
       <!-- Poster -->
       <div class="cv-modal__poster-wrap">
-        <img
-          class="cv-modal__poster"
-          id="modal-poster"
-          alt=""
-          loading="eager"
-          decoding="async"
-        >
+        <img class="cv-modal__poster" id="modal-poster" alt="" loading="eager" decoding="async">
         <div class="cv-modal__poster-glow" id="modal-poster-glow"></div>
       </div>
 
@@ -108,8 +97,9 @@
 
         <div class="cv-modal__tmdb-badge" aria-label="Data from TMDB">
           <svg width="10" height="10" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-            <circle cx="20" cy="20" r="20" fill="#01b4e4"/>
-            <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="18" font-weight="700">T</text>
+            <circle cx="20" cy="20" r="20" fill="#01b4e4" />
+            <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="18"
+              font-weight="700">T</text>
           </svg>
           <span>Data via TMDB</span>
         </div>
@@ -120,4 +110,5 @@
 
   <script src="./script.js"></script>
 </body>
+
 </html>
