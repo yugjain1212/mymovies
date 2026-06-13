@@ -363,7 +363,7 @@ function onPointerDown(e) {
   pointer.active = true;
   pointer.targetStrength = 1.0;
   pointer.isTouch = e.pointerType === 'touch';
-  
+
   if (pointer.isTouch) {
     touchDown = true;
     lastTouchX = e.clientX;
@@ -373,7 +373,7 @@ function onPointerDown(e) {
     camera.vx = 0;
     camera.vy = 0;
   }
-  
+
   if (!interacted) {
     interacted = true;
     wordmarkEl.classList.add('is-hidden');
@@ -433,13 +433,13 @@ function onScroll() {
     pointer.ty = height / 2;
     pointer.targetStrength = 0.3;
     pointer.isTouch = true;
-    
+
     if (!interacted) {
       interacted = true;
       wordmarkEl.classList.add('is-hidden');
       hintEl.classList.add('is-hidden');
     }
-    
+
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(() => {
       if (!pointer.active) {
@@ -662,15 +662,15 @@ function render() {
     grad.addColorStop(sp.midStop, 'rgba(0,0,0,0.10)');
     grad.addColorStop(sp.outerStop, 'rgba(0,0,0,0.80)');
     grad.addColorStop(1, `rgba(0,0,0,${sp.edgeAlpha})`);
-    
+
     ctx.globalAlpha = pointer.strength;
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, width, height);
-    
+
     ctx.globalAlpha = 1 - pointer.strength;
     ctx.fillStyle = `rgba(0,0,0,${sp.idleAlpha})`;
     ctx.fillRect(0, 0, width, height);
-    
+
     ctx.globalAlpha = 1.0;
   } else {
     ctx.fillStyle = `rgba(0,0,0,${sp.idleAlpha})`;

@@ -1,5 +1,23 @@
 {
-  "genreMap": {},
+  "genreMap": {
+    "12": "Adventure",
+    "14": "Fantasy",
+    "16": "Animation",
+    "18": "Drama",
+    "27": "Horror",
+    "28": "Action",
+    "35": "Comedy",
+    "36": "History",
+    "53": "Thriller",
+    "80": "Crime",
+    "99": "Documentary",
+    "878": "Sci-Fi",
+    "9648": "Mystery",
+    "10402": "Music",
+    "10749": "Romance",
+    "10751": "Family",
+    "10752": "War"
+  },
   "movies": [
     {
       "id": 550,
@@ -3231,6 +3249,150 @@
       "overview": "The drug-induced utopias of four Coney Island residents are shattered when their addictions run deep.",
       "posterGrid": "https://image.tmdb.org/t/p/w342/9BTwsLaMVHOGFlmsSlx5QYCaXb.jpg",
       "posterModal": "https://image.tmdb.org/t/p/w500/9BTwsLaMVHOGFlmsSlx5QYCaXb.jpg"
+    },
+    {
+      "id": 207,
+      "title": "Dead Poets Society",
+      "year": "1989",
+      "language": "EN",
+      "genreIds": [18],
+      "rating": "8.1",
+      "votes": 10527,
+      "overview": "At an elite, old-fashioned boarding school in New England, a passionate English teacher inspires his students to rebel against conformity and seize the day through the magic of poetry.",
+      "posterGrid": "https://image.tmdb.org/t/p/w342/ay2ocRNFYB1eZCLPo5GVHr8Pqfq.jpg",
+      "posterModal": "https://image.tmdb.org/t/p/w500/ay2ocRNFYB1eZCLPo5GVHr8Pqfq.jpg"
+    },
+    {
+      "id": 251516,
+      "title": "The Intern",
+      "year": "2015",
+      "language": "EN",
+      "genreIds": [35, 18],
+      "rating": "7.1",
+      "votes": 7208,
+      "overview": "70-year-old widower Ben Whittaker has discovered that retirement isn't all it's cracked up to be. Seizing an opportunity to get back in the game, he becomes a senior intern at an online fashion site, founded and run by Jules Ostin.",
+      "posterGrid": "https://image.tmdb.org/t/p/w342/xjIRFGkix9LLBG5UOvvDQGClzj1.jpg",
+      "posterModal": "https://image.tmdb.org/t/p/w500/xjIRFGkix9LLBG5UOvvDQGClzj1.jpg"
+    },
+    {
+      "id": 185,
+      "title": "A Clockwork Orange",
+      "year": "1971",
+      "language": "EN",
+      "genreIds": [80, 878, 18],
+      "rating": "8.1",
+      "votes": 14101,
+      "overview": "Demonic gang leader Alex goes on the spree of rape, mugging, and murder with his gang of Droogs. He is eventually arrested and volunteers to be a guinea pig for an aversion-therapy experiment, but things don't go as expected.",
+      "posterGrid": "https://image.tmdb.org/t/p/w342/4MgSMFnRSB1fQpNmBWJjkGoJSuZ.jpg",
+      "posterModal": "https://image.tmdb.org/t/p/w500/4MgSMFnRSB1fQpNmBWJjkGoJSuZ.jpg"
+    },
+    {
+      "id": 556574,
+      "title": "Murder Mystery",
+      "year": "2019",
+      "language": "EN",
+      "genreIds": [35, 80, 9648],
+      "rating": "6.0",
+      "votes": 4241,
+      "overview": "A New York City cop and his wife go on a European vacation to reinvigorate the spark in their marriage, but end up getting framed and on the run for the murder of an elderly billionaire they'd befriended on the flight over.",
+      "posterGrid": "https://image.tmdb.org/t/p/w342/lN9tDlGh0SHuHxe0HduDnRbsmZS.jpg",
+      "posterModal": "https://image.tmdb.org/t/p/w500/lN9tDlGh0SHuHxe0HduDnRbsmZS.jpg"
+    },
+    {
+      "id": 75051,
+      "title": "That's My Boy",
+      "year": "2012",
+      "language": "EN",
+      "genreIds": [35],
+      "rating": "6.4",
+      "votes": 1682,
+      "overview": "While in his teens, Donnie fathered a son, Todd, with his teacher and was left to raise him alone after she went to prison. When Todd was 18, he changed his name and walked out. Now, Donnie is broke and facing time in jail unless he can make things right with his son.",
+      "posterGrid": "https://image.tmdb.org/t/p/w342/5wdHMPqhL7FejLLCJILBGsRjH7E.jpg",
+      "posterModal": "https://image.tmdb.org/t/p/w500/5wdHMPqhL7FejLLCJILBGsRjH7E.jpg"
+    },
+    {
+      "id": 9374,
+      "title": "Billy Madison",
+      "year": "1995",
+      "language": "EN",
+      "genreIds": [35, 10751],
+      "rating": "6.4",
+      "votes": 2994,
+      "overview": "To inherit his family's hotel empire, immature man-child Billy Madison must go back and complete grades 1-12. Each grade must be passed in just two weeks.",
+      "posterGrid": "https://image.tmdb.org/t/p/w342/7Mcgh4wSHDPBHMFB1UCx0iGGInr.jpg",
+      "posterModal": "https://image.tmdb.org/t/p/w500/7Mcgh4wSHDPBHMFB1UCx0iGGInr.jpg"
+    },
+    {
+      "id": 693134,
+      "title": "Dune: Part Two",
+      "year": "2024",
+      "language": "EN",
+      "genreIds": [878, 12],
+      "rating": "8.0",
+      "votes": 7821,
+      "overview": "Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen while on a path of revenge against the conspirators who destroyed his family.",
+      "posterGrid": "https://image.tmdb.org/t/p/w342/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
+      "posterModal": "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg"
+    },
+    {
+      "id": 24,
+      "title": "Kill Bill: Vol. 1",
+      "year": "2003",
+      "language": "EN",
+      "genreIds": [28, 80, 18],
+      "rating": "8.1",
+      "votes": 18609,
+      "overview": "An assassin is shot by her ruthless employer, Bill, and other members of their assassination circle – but she survives. Four years later she wakes from a coma and seeks revenge on those who tried to kill her.",
+      "posterGrid": "https://image.tmdb.org/t/p/w342/2b0Fxl5Nt7W0ZwkHO2Vqh0V8YLN.jpg",
+      "posterModal": "https://image.tmdb.org/t/p/w500/2b0Fxl5Nt7W0ZwkHO2Vqh0V8YLN.jpg"
+    },
+    {
+      "id": 3972,
+      "title": "Rush Hour",
+      "year": "1998",
+      "language": "EN",
+      "genreIds": [28, 35, 80],
+      "rating": "7.3",
+      "votes": 5878,
+      "overview": "When Hong Kong Inspector Lee is summoned to Los Angeles to investigate a kidnapping, the FBI doesn't want any outside help and assigns a loudmouthed LAPD detective named James Carter to distract Lee from the case.",
+      "posterGrid": "https://image.tmdb.org/t/p/w342/rn98oTGGFVrL0OtXuBsgY8nR5C0.jpg",
+      "posterModal": "https://image.tmdb.org/t/p/w500/rn98oTGGFVrL0OtXuBsgY8nR5C0.jpg"
+    },
+    {
+      "id": 419430,
+      "title": "Get Out",
+      "year": "2017",
+      "language": "EN",
+      "genreIds": [27, 9648, 53],
+      "rating": "7.7",
+      "votes": 12010,
+      "overview": "Now that Chris and his girlfriend, Rose, have reached the meet-the-parents milestone of dating, she invites him for a weekend getaway upstate with Missy and Dean. At first, Chris reads the family's overly accommodating behavior as nervous attempts to deal with their daughter's interracial relationship, but as the weekend progresses, a series of increasingly disturbing discoveries lead him to a truth that he never could have imagined.",
+      "posterGrid": "https://image.tmdb.org/t/p/w342/tFXcEccSQMf3lfhfXKSU9iRBpa3.jpg",
+      "posterModal": "https://image.tmdb.org/t/p/w500/tFXcEccSQMf3lfhfXKSU9iRBpa3.jpg"
+    },
+    {
+      "id": 11004,
+      "title": "Rushmore",
+      "year": "1998",
+      "language": "EN",
+      "genreIds": [35, 18],
+      "rating": "7.4",
+      "votes": 3104,
+      "overview": "Max Fischer is a student at Rushmore Academy whose extra-curricular activities are vast and wide, but whose academics are lacking. When he falls for first-grade teacher Miss Cross, Max gains a father figure and rival in industrialist Herman Blume.",
+      "posterGrid": "https://image.tmdb.org/t/p/w342/h3fxqaTB5KoYU7TG8x7MVPTVh01.jpg",
+      "posterModal": "https://image.tmdb.org/t/p/w500/h3fxqaTB5KoYU7TG8x7MVPTVh01.jpg"
+    },
+    {
+      "id": 4943,
+      "title": "The Pianist",
+      "year": "2002",
+      "language": "EN",
+      "genreIds": [18, 36, 10752],
+      "rating": "8.3",
+      "votes": 14207,
+      "overview": "The true story of Władysław Szpilman, a Polish Jewish pianist who survived the Nazi occupation in Warsaw during World War II.",
+      "posterGrid": "https://image.tmdb.org/t/p/w342/2hFvxCCWrTmCYwfy7yum0GKRi3Y.jpg",
+      "posterModal": "https://image.tmdb.org/t/p/w500/2hFvxCCWrTmCYwfy7yum0GKRi3Y.jpg"
     }
   ]
 }

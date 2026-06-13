@@ -8,47 +8,50 @@
    ──────────────────────────────────────────────────────────── */
 :root {
   /* Surface */
-  --c-bg:            #050505;
-  --c-surface:       #0e0e0e;
-  --c-surface-hi:    #161616;
+  --c-bg: #050505;
+  --c-surface: #0e0e0e;
+  --c-surface-hi: #161616;
 
   /* Text */
-  --c-text:          #f5f5f5;
-  --c-text-2:        #8a8a8a;
-  --c-text-3:        rgba(255, 255, 255, 0.28);
+  --c-text: #f5f5f5;
+  --c-text-2: #8a8a8a;
+  --c-text-3: rgba(255, 255, 255, 0.28);
 
   /* Borders */
-  --c-border:        rgba(255, 255, 255, 0.07);
-  --c-border-hi:     rgba(255, 255, 255, 0.13);
+  --c-border: rgba(255, 255, 255, 0.07);
+  --c-border-hi: rgba(255, 255, 255, 0.13);
 
   /* Accent — warm cinematic gold */
-  --c-gold:          #c9a96e;
-  --c-gold-dim:      rgba(201, 169, 110, 0.12);
+  --c-gold: #c9a96e;
+  --c-gold-dim: rgba(201, 169, 110, 0.12);
 
   /* Typography */
-  --f-display:       'Inter Tight', 'Inter', Arial, sans-serif;
-  --f-body:          'Inter', Arial, sans-serif;
+  --f-display: 'Inter Tight', 'Inter', Arial, sans-serif;
+  --f-body: 'Inter', Arial, sans-serif;
 
   /* Easing */
-  --ease-spring:     cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-out:        cubic-bezier(0.0, 0.0, 0.2, 1);
-  --ease-in-out:     cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Modal timing */
-  --modal-dur:       420ms;
-  --modal-back-dur:  260ms;
+  --modal-dur: 420ms;
+  --modal-back-dur: 260ms;
 }
 
 /* ────────────────────────────────────────────────────────────
    2. RESET & BASE
    ──────────────────────────────────────────────────────────── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -110,8 +113,13 @@ html, body {
 }
 
 @keyframes ls-shimmer {
-  0%   { transform: translateX(-200%); }
-  100% { transform: translateX(600%); }
+  0% {
+    transform: translateX(-200%);
+  }
+
+  100% {
+    transform: translateX(600%);
+  }
 }
 
 .ls-sub {
@@ -338,12 +346,13 @@ html, body {
   overflow-y: auto;
   padding-right: 6px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.08) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
 }
 
 .cv-modal__meta::-webkit-scrollbar {
   width: 3px;
 }
+
 .cv-modal__meta::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.08);
   border-radius: 2px;
@@ -556,6 +565,7 @@ html, body {
    12. REDUCED MOTION
    ──────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
+
   .cv-modal__panel,
   .cv-modal__backdrop,
   .cv-modal__poster,
